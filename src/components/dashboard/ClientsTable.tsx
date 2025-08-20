@@ -1,8 +1,9 @@
 
 import { useState } from 'react';
-import { Search, Filter, Mail, Camera, DollarSign, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Search, Filter, Mail, Camera, IndianRupee, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ClientsTableProps {
   data: any[];
@@ -21,12 +22,12 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'Completed':
-        return <CheckCircle className="w-4 h-4 text-cyber-green" />;
-      case 'In Progress':
-        return <Clock className="w-4 h-4 text-cyber-cyan" />;
+      case 'Delivered':
+        return <CheckCircle className="w-4 h-4 text-green-400" />;
+      case 'In Process':
+        return <Clock className="w-4 h-4 text-blue-400" />;
       case 'Pending':
-        return <AlertTriangle className="w-4 h-4 text-cyber-pink" />;
+        return <AlertTriangle className="w-4 h-4 text-orange-400" />;
       default:
         return <Clock className="w-4 h-4 text-gray-400" />;
     }
@@ -34,23 +35,23 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Completed':
-        return 'bg-cyber-green/20 text-cyber-green border-cyber-green/30';
-      case 'In Progress':
-        return 'bg-cyber-cyan/20 text-cyber-cyan border-cyber-cyan/30';
+      case 'Delivered':
+        return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'In Process':
+        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
       case 'Pending':
-        return 'bg-cyber-pink/20 text-cyber-pink border-cyber-pink/30';
+        return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
       default:
         return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
     }
   };
 
   return (
-    <div className="glass-card rounded-lg p-6 neon-border hover-glow">
+    <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg p-6 border border-blue-500/30 shadow-2xl">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h3 className="text-xl font-semibold gradient-text flex items-center gap-2">
+        <h3 className="text-xl font-semibold text-white flex items-center gap-2">
           Client Database
-          <div className="w-2 h-2 bg-cyber-purple rounded-full animate-pulse" />
+          <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
         </h3>
         
         <div className="flex gap-2 w-full sm:w-auto">
@@ -60,52 +61,56 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
               placeholder="Search clients..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 glass neon-border text-white placeholder-gray-400"
+              className="pl-10 bg-gray-800/50 border-blue-500/30 text-white placeholder-gray-400"
             />
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className={`glass neon-border hover:neon-glow ${statusFilter !== 'all' ? 'bg-cyber-cyan/20' : ''}`}
-            onClick={() => setStatusFilter(statusFilter === 'all' ? 'Completed' : 'all')}
-          >
-            <Filter className="w-4 h-4 text-cyber-cyan" />
-          </Button>
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[140px] bg-gray-800/50 border-blue-500/30 text-white">
+              <Filter className="w-4 h-4 text-blue-400 mr-2" />
+              <SelectValue placeholder="Filter" />
+            </SelectTrigger>
+            <SelectContent className="bg-gray-800 border-blue-500/30">
+              <SelectItem value="all" className="text-white">All Status</SelectItem>
+              <SelectItem value="Delivered" className="text-white">Delivered</SelectItem>
+              <SelectItem value="In Process" className="text-white">In Process</SelectItem>
+              <SelectItem value="Pending" className="text-white">Pending</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
       <div className="overflow-x-auto">
         <div className="max-h-96 overflow-y-auto custom-scrollbar">
           <table className="w-full">
-            <thead className="sticky top-0 bg-background/80 backdrop-blur-sm">
-              <tr className="border-b border-cyber-cyan/30">
-                <th className="text-left py-3 px-4 font-medium text-cyber-cyan">Client</th>
-                <th className="text-left py-3 px-4 font-medium text-cyber-cyan">Headshots</th>
-                <th className="text-left py-3 px-4 font-medium text-cyber-cyan">Price</th>
-                <th className="text-left py-3 px-4 font-medium text-cyber-cyan">Status</th>
-                <th className="text-left py-3 px-4 font-medium text-cyber-cyan">Contact</th>
+            <thead className="sticky top-0 bg-gray-900/80 backdrop-blur-sm">
+              <tr className="border-b border-blue-500/30">
+                <th className="text-left py-3 px-4 font-medium text-blue-400">Client</th>
+                <th className="text-left py-3 px-4 font-medium text-blue-400">Headshots</th>
+                <th className="text-left py-3 px-4 font-medium text-blue-400">Price</th>
+                <th className="text-left py-3 px-4 font-medium text-blue-400">Status</th>
+                <th className="text-left py-3 px-4 font-medium text-blue-400">Contact</th>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((item, index) => (
                 <tr 
                   key={index} 
-                  className="border-b border-gray-700/30 hover:bg-cyber-cyan/5 transition-colors duration-200 group"
+                  className="border-b border-gray-700/30 hover:bg-blue-500/10 transition-colors duration-200 group"
                 >
                   <td className="py-3 px-4">
-                    <div className="font-medium text-white group-hover:text-cyber-cyan transition-colors">
+                    <div className="font-medium text-white group-hover:text-blue-400 transition-colors">
                       {item.Clients || 'N/A'}
                     </div>
                   </td>
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2 text-gray-300">
-                      <Camera className="w-4 h-4 text-cyber-purple" />
+                      <Camera className="w-4 h-4 text-purple-400" />
                       {item['No. of Headshots'] || '0'}
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="flex items-center gap-2 text-cyber-green font-semibold">
-                      <DollarSign className="w-4 h-4" />
+                    <div className="flex items-center gap-2 text-green-400 font-semibold">
+                      <IndianRupee className="w-4 h-4" />
                       {item.Price?.replace('$', '') || '0'}
                     </div>
                   </td>
@@ -116,7 +121,7 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="flex items-center gap-2 text-gray-300 hover:text-cyber-cyan transition-colors cursor-pointer" 
+                    <div className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors cursor-pointer" 
                          onClick={() => window.open(`mailto:${item.Email}`)}>
                       <Mail className="w-4 h-4" />
                       <span className="truncate max-w-32">{item.Email || 'N/A'}</span>

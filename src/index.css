@@ -16,7 +16,7 @@
     --card-foreground: 210 40% 98%;
     
     /* Interactive Elements */
-    --primary: 192 100% 50%; /* Electric Cyan */
+    --primary: 217 91% 60%; /* Better Blue */
     --primary-foreground: 222 84% 4.9%;
     
     --secondary: 271 81% 56%; /* Electric Purple */
@@ -30,24 +30,9 @@
     --warning: 38 92% 50%;
     --error: 0 84% 60%;
     
-    /* Glass Effects */
-    --glass-bg: 222 84% 4.9% / 0.1;
-    --glass-border: 192 100% 50% / 0.2;
-    
-    /* Neon Glows */
-    --neon-cyan: 192 100% 50%;
-    --neon-purple: 271 81% 56%;
-    --neon-green: 142 76% 36%;
-    --neon-pink: 328 86% 70%;
-    
-    /* Gradients */
-    --gradient-cyber: linear-gradient(135deg, hsl(222 84% 4.9%) 0%, hsl(271 81% 56% / 0.1) 50%, hsl(192 100% 50% / 0.1) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(222 84% 4.9% / 0.8) 0%, hsl(271 81% 56% / 0.05) 100%);
-    --gradient-neon: linear-gradient(90deg, hsl(192 100% 50%) 0%, hsl(271 81% 56%) 50%, hsl(328 86% 70%) 100%);
-    
     --border: 222 84% 11%;
     --input: 222 84% 11%;
-    --ring: 192 100% 50%;
+    --ring: 217 91% 60%;
     --radius: 0.75rem;
   }
 }
@@ -59,7 +44,7 @@
   
   body {
     @apply bg-background text-foreground overflow-x-hidden;
-    background: var(--gradient-cyber);
+    background: linear-gradient(135deg, hsl(222 84% 4.9%) 0%, hsl(217 91% 60% / 0.1) 50%, hsl(222 84% 4.9%) 100%);
     min-height: 100vh;
   }
   
@@ -69,16 +54,16 @@
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-background/50;
+    background: hsl(222 84% 4.9% / 0.5);
   }
   
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, hsl(192 100% 50%), hsl(271 81% 56%));
+    background: linear-gradient(180deg, hsl(217 91% 60%), hsl(271 81% 56%));
     border-radius: 4px;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, hsl(271 81% 56%), hsl(328 86% 70%));
+    background: linear-gradient(180deg, hsl(271 81% 56%), hsl(217 91% 60%));
   }
   
   /* Custom scrollbar for specific elements */
@@ -93,129 +78,23 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, hsl(192 100% 50%), hsl(271 81% 56%));
+    background: linear-gradient(180deg, hsl(217 91% 60%), hsl(271 81% 56%));
     border-radius: 3px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, hsl(271 81% 56%), hsl(328 86% 70%));
+    background: linear-gradient(180deg, hsl(271 81% 56%), hsl(217 91% 60%));
   }
 }
 
-@layer components {
-  /* Glass morphism effects */
-  .glass {
-    background: hsl(222 84% 4.9% / 0.05);
-    backdrop-filter: blur(20px);
-    border: 1px solid hsl(192 100% 50% / 0.2);
-  }
-  
-  .glass-card {
-    background: var(--gradient-card);
-    backdrop-filter: blur(20px);
-    border: 1px solid hsl(192 100% 50% / 0.3);
-    box-shadow: 
-      0 8px 32px hsl(222 84% 4.9% / 0.3),
-      inset 0 1px 0 hsl(210 40% 98% / 0.1);
-  }
-  
-  /* Neon effects */
-  .neon-border {
-    border: 1px solid hsl(192 100% 50%);
-    box-shadow: 
-      0 0 10px hsl(192 100% 50% / 0.5),
-      inset 0 0 10px hsl(192 100% 50% / 0.1);
-  }
-  
-  .neon-glow {
-    box-shadow: 
-      0 0 20px hsl(192 100% 50% / 0.6),
-      0 0 40px hsl(192 100% 50% / 0.4),
-      0 0 80px hsl(192 100% 50% / 0.2);
-  }
-  
-  .neon-text {
-    color: hsl(192 100% 50%);
-    text-shadow: 
-      0 0 10px hsl(192 100% 50% / 0.8),
-      0 0 20px hsl(192 100% 50% / 0.6),
-      0 0 40px hsl(192 100% 50% / 0.4);
-  }
-  
-  /* Hover effects */
-  .hover-glow {
-    transition: all 0.3s ease;
-  }
-  
-  .hover-glow:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-      0 0 30px hsl(192 100% 50% / 0.7),
-      0 10px 30px hsl(222 84% 4.9% / 0.3);
-  }
-  
-  /* Pulse animation */
-  .pulse-neon {
-    animation: pulse-neon 2s ease-in-out infinite alternate;
-  }
-  
-  @keyframes pulse-neon {
-    from {
-      box-shadow: 0 0 20px hsl(192 100% 50% / 0.6);
-    }
-    to {
-      box-shadow: 
-        0 0 30px hsl(192 100% 50% / 0.8),
-        0 0 60px hsl(192 100% 50% / 0.4);
-    }
-  }
-  
-  /* Gradient text */
-  .gradient-text {
-    background: var(--gradient-neon);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
+@layer utilities {
   /* Loading animation */
-  .loading-cyber {
-    background: linear-gradient(90deg, 
-      transparent 0%, 
-      hsl(192 100% 50% / 0.4) 50%, 
-      transparent 100%);
+  .animate-loading-cyber {
     animation: loading-cyber 1.5s infinite;
   }
   
   @keyframes loading-cyber {
     0% { transform: translateX(-100%); }
     100% { transform: translateX(100%); }
-  }
-}
-
-@layer utilities {
-  /* Cyberpunk specific utilities */
-  .bg-cyber-gradient {
-    background: var(--gradient-cyber);
-  }
-  
-  .bg-card-gradient {
-    background: var(--gradient-card);
-  }
-  
-  .text-cyber-primary {
-    color: hsl(192 100% 50%);
-  }
-  
-  .text-cyber-secondary {
-    color: hsl(271 81% 56%);
-  }
-  
-  .text-cyber-accent {
-    color: hsl(142 76% 36%);
-  }
-  
-  .border-cyber {
-    border-color: hsl(192 100% 50% / 0.3);
   }
 }
