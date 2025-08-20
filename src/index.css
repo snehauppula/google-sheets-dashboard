@@ -73,12 +73,12 @@
   }
   
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, hsl(var(--neon-cyan)), hsl(var(--neon-purple)));
+    background: linear-gradient(180deg, hsl(192 100% 50%), hsl(271 81% 56%));
     border-radius: 4px;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, hsl(var(--neon-purple)), hsl(var(--neon-pink)));
+    background: linear-gradient(180deg, hsl(271 81% 56%), hsl(328 86% 70%));
   }
   
   /* Custom scrollbar for specific elements */
@@ -88,58 +88,58 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
+    background: hsl(222 84% 4.9% / 0.3);
     border-radius: 3px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, hsl(192, 100%, 50%), hsl(271, 81%, 56%));
+    background: linear-gradient(180deg, hsl(192 100% 50%), hsl(271 81% 56%));
     border-radius: 3px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, hsl(271, 81%, 56%), hsl(328, 86%, 70%));
+    background: linear-gradient(180deg, hsl(271 81% 56%), hsl(328 86% 70%));
   }
 }
 
 @layer components {
   /* Glass morphism effects */
   .glass {
-    background: rgba(255, 255, 255, 0.05);
+    background: hsl(222 84% 4.9% / 0.05);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid hsl(192 100% 50% / 0.2);
   }
   
   .glass-card {
     background: var(--gradient-card);
     backdrop-filter: blur(20px);
-    border: 1px solid hsl(var(--neon-cyan) / 0.3);
+    border: 1px solid hsl(192 100% 50% / 0.3);
     box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 8px 32px hsl(222 84% 4.9% / 0.3),
+      inset 0 1px 0 hsl(210 40% 98% / 0.1);
   }
   
   /* Neon effects */
   .neon-border {
-    border: 1px solid hsl(var(--neon-cyan));
+    border: 1px solid hsl(192 100% 50%);
     box-shadow: 
-      0 0 10px hsl(var(--neon-cyan) / 0.5),
-      inset 0 0 10px hsl(var(--neon-cyan) / 0.1);
+      0 0 10px hsl(192 100% 50% / 0.5),
+      inset 0 0 10px hsl(192 100% 50% / 0.1);
   }
   
   .neon-glow {
     box-shadow: 
-      0 0 20px hsl(var(--neon-cyan) / 0.6),
-      0 0 40px hsl(var(--neon-cyan) / 0.4),
-      0 0 80px hsl(var(--neon-cyan) / 0.2);
+      0 0 20px hsl(192 100% 50% / 0.6),
+      0 0 40px hsl(192 100% 50% / 0.4),
+      0 0 80px hsl(192 100% 50% / 0.2);
   }
   
   .neon-text {
-    color: hsl(var(--neon-cyan));
+    color: hsl(192 100% 50%);
     text-shadow: 
-      0 0 10px hsl(var(--neon-cyan) / 0.8),
-      0 0 20px hsl(var(--neon-cyan) / 0.6),
-      0 0 40px hsl(var(--neon-cyan) / 0.4);
+      0 0 10px hsl(192 100% 50% / 0.8),
+      0 0 20px hsl(192 100% 50% / 0.6),
+      0 0 40px hsl(192 100% 50% / 0.4);
   }
   
   /* Hover effects */
@@ -150,8 +150,8 @@
   .hover-glow:hover {
     transform: translateY(-2px);
     box-shadow: 
-      0 0 30px hsl(var(--neon-cyan) / 0.7),
-      0 10px 30px rgba(0, 0, 0, 0.3);
+      0 0 30px hsl(192 100% 50% / 0.7),
+      0 10px 30px hsl(222 84% 4.9% / 0.3);
   }
   
   /* Pulse animation */
@@ -161,12 +161,12 @@
   
   @keyframes pulse-neon {
     from {
-      box-shadow: 0 0 20px hsl(var(--neon-cyan) / 0.6);
+      box-shadow: 0 0 20px hsl(192 100% 50% / 0.6);
     }
     to {
       box-shadow: 
-        0 0 30px hsl(var(--neon-cyan) / 0.8),
-        0 0 60px hsl(var(--neon-cyan) / 0.4);
+        0 0 30px hsl(192 100% 50% / 0.8),
+        0 0 60px hsl(192 100% 50% / 0.4);
     }
   }
   
@@ -182,7 +182,7 @@
   .loading-cyber {
     background: linear-gradient(90deg, 
       transparent 0%, 
-      hsl(var(--neon-cyan) / 0.4) 50%, 
+      hsl(192 100% 50% / 0.4) 50%, 
       transparent 100%);
     animation: loading-cyber 1.5s infinite;
   }
@@ -204,18 +204,18 @@
   }
   
   .text-cyber-primary {
-    color: hsl(var(--neon-cyan));
+    color: hsl(192 100% 50%);
   }
   
   .text-cyber-secondary {
-    color: hsl(var(--neon-purple));
+    color: hsl(271 81% 56%);
   }
   
   .text-cyber-accent {
-    color: hsl(var(--neon-green));
+    color: hsl(142 76% 36%);
   }
   
   .border-cyber {
-    border-color: hsl(var(--neon-cyan) / 0.3);
+    border-color: hsl(192 100% 50% / 0.3);
   }
 }

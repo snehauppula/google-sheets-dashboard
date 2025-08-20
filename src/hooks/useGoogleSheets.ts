@@ -16,7 +16,12 @@ const fetchSheetData = async () => {
     }
     
     const data = await response.json();
-    const csvText = data.contents;
+    let csvText = data.contents;
+    
+    // Handle base64 encoded data
+    if (csvText.startsWith('data:text/csv;base64,')) {
+      csvText = atob(csvText.split(',')[1]);
+    }
     
     console.log('Raw CSV data:', csvText);
     

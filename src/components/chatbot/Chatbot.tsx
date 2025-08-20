@@ -53,12 +53,22 @@ const Chatbot = () => {
       console.log('Webhook response status:', response.status);
       
       if (response.ok) {
-        const responseData = await response.text();
+        const responseData = await response.json();
         console.log('Webhook response data:', responseData);
+        
+        // Extract the actual message from the webhook response
+        let botMessageText = 'Message received successfully!';
+        if (responseData.output) {
+          botMessageText = responseData.output;
+        } else if (responseData.message) {
+          botMessageText = responseData.message;
+        } else if (typeof responseData === 'string') {
+          botMessageText = responseData;
+        }
         
         const botResponse = {
           id: (Date.now() + 1).toString(),
-          text: responseData || 'Message received successfully!',
+          text: botMessageText,
           sender: 'bot' as const,
           timestamp: new Date()
         };
@@ -116,14 +126,14 @@ const Chatbot = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-28 right-6 w-96 h-[32rem] bg-gradient-to-br from-background/95 to-background/90 backdrop-blur-2xl border-2 border-cyber-cyan/30 rounded-2xl shadow-2xl z-40 flex flex-col overflow-hidden">
+        <div className="fixed bottom-28 right-6 w-96 h-[32rem] bg-gradient-to-br from-background/95 to-background/90 backdrop-blur-2xl border-2 border-cyber-cyan/50 rounded-2xl shadow-2xl z-40 flex flex-col overflow-hidden">
           {/* Enhanced Header */}
-          <div className="p-6 border-b-2 border-cyber-cyan/20 bg-gradient-to-r from-cyber-purple/10 to-cyber-cyan/10">
+          <div className="p-6 border-b-2 border-cyber-cyan/30 bg-gradient-to-r from-cyber-purple/20 to-cyber-cyan/20">
             <h3 className="text-xl font-bold bg-gradient-to-r from-cyber-cyan to-cyber-purple bg-clip-text text-transparent flex items-center gap-3">
               <Bot className="w-6 h-6 text-cyber-cyan animate-pulse drop-shadow-lg" />
               Cyber Assistant
             </h3>
-            <p className="text-sm text-muted-foreground mt-1">AI-powered dashboard assistant</p>
+            <p className="text-sm text-gray-300 mt-1">AI-powered dashboard assistant</p>
           </div>
 
           {/* Enhanced Messages Area */}
@@ -135,8 +145,8 @@ const Chatbot = () => {
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg border-2 ${
                   msg.sender === 'user' 
-                    ? 'bg-gradient-to-br from-cyber-cyan/30 to-cyber-cyan/10 border-cyber-cyan/40 backdrop-blur-xl' 
-                    : 'bg-gradient-to-br from-cyber-purple/30 to-cyber-purple/10 border-cyber-purple/40 backdrop-blur-xl'
+                    ? 'bg-gradient-to-br from-cyber-cyan/40 to-cyber-cyan/20 border-cyber-cyan/60 backdrop-blur-xl' 
+                    : 'bg-gradient-to-br from-cyber-purple/40 to-cyber-purple/20 border-cyber-purple/60 backdrop-blur-xl'
                 }`}>
                   {msg.sender === 'user' ? (
                     <User className="w-5 h-5 text-cyber-cyan drop-shadow-sm" />
@@ -146,11 +156,11 @@ const Chatbot = () => {
                 </div>
                 <div className={`max-w-72 p-4 rounded-2xl text-sm shadow-lg backdrop-blur-xl border-2 ${
                   msg.sender === 'user'
-                    ? 'bg-gradient-to-br from-cyber-cyan/20 to-cyber-cyan/10 text-white border-cyber-cyan/30 rounded-tr-md'
-                    : 'bg-gradient-to-br from-cyber-purple/20 to-cyber-purple/10 text-white border-cyber-purple/30 rounded-tl-md'
+                    ? 'bg-gradient-to-br from-cyber-cyan/30 to-cyber-cyan/15 text-white border-cyber-cyan/50 rounded-tr-md'
+                    : 'bg-gradient-to-br from-cyber-purple/30 to-cyber-purple/15 text-white border-cyber-purple/50 rounded-tl-md'
                 }`}>
-                  <div className="leading-relaxed">{msg.text}</div>
-                  <div className="text-xs text-muted-foreground/80 mt-2 font-mono">
+                  <div className="leading-relaxed text-white">{msg.text}</div>
+                  <div className="text-xs text-gray-300 mt-2 font-mono">
                     {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </div>
                 </div>
@@ -159,10 +169,10 @@ const Chatbot = () => {
             
             {isLoading && (
               <div className="flex items-center gap-3 animate-in slide-in-from-bottom duration-300">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyber-purple/30 to-cyber-purple/10 border-2 border-cyber-purple/40 backdrop-blur-xl flex items-center justify-center shadow-lg">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyber-purple/40 to-cyber-purple/20 border-2 border-cyber-purple/60 backdrop-blur-xl flex items-center justify-center shadow-lg">
                   <Bot className="w-5 h-5 text-cyber-purple animate-pulse drop-shadow-sm" />
                 </div>
-                <div className="bg-gradient-to-br from-cyber-purple/20 to-cyber-purple/10 border-2 border-cyber-purple/30 backdrop-blur-xl rounded-2xl rounded-tl-md p-4 shadow-lg">
+                <div className="bg-gradient-to-br from-cyber-purple/30 to-cyber-purple/15 border-2 border-cyber-purple/50 backdrop-blur-xl rounded-2xl rounded-tl-md p-4 shadow-lg">
                   <div className="flex gap-2">
                     <div className="w-2 h-2 bg-cyber-purple rounded-full animate-bounce shadow-sm" />
                     <div className="w-2 h-2 bg-cyber-purple rounded-full animate-bounce shadow-sm" style={{ animationDelay: '0.1s' }} />
@@ -174,20 +184,20 @@ const Chatbot = () => {
           </div>
 
           {/* Enhanced Input Area */}
-          <div className="p-4 border-t-2 border-cyber-cyan/20 bg-gradient-to-r from-cyber-purple/5 to-cyber-cyan/5 backdrop-blur-xl">
+          <div className="p-4 border-t-2 border-cyber-cyan/30 bg-gradient-to-r from-cyber-purple/10 to-cyber-cyan/10 backdrop-blur-xl">
             <div className="flex gap-3">
               <Input
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type your message..."
-                className="flex-1 bg-background/80 backdrop-blur-xl border-2 border-cyber-cyan/30 text-white placeholder-muted-foreground/60 rounded-xl px-4 py-3 focus:border-cyber-cyan focus:ring-2 focus:ring-cyber-cyan/20 transition-all duration-300 shadow-lg"
+                className="flex-1 bg-background/90 backdrop-blur-xl border-2 border-cyber-cyan/40 text-white placeholder-gray-300 rounded-xl px-4 py-3 focus:border-cyber-cyan focus:ring-2 focus:ring-cyber-cyan/30 transition-all duration-300 shadow-lg"
                 disabled={isLoading}
               />
               <Button
                 onClick={sendMessage}
                 disabled={!message.trim() || isLoading}
-                className="w-12 h-12 rounded-xl bg-gradient-to-r from-cyber-cyan/20 to-cyber-purple/20 backdrop-blur-xl border-2 border-cyber-cyan/30 hover:from-cyber-cyan/30 hover:to-cyber-purple/30 hover:border-cyber-cyan/50 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-12 h-12 rounded-xl bg-gradient-to-r from-cyber-cyan/30 to-cyber-purple/30 backdrop-blur-xl border-2 border-cyber-cyan/40 hover:from-cyber-cyan/40 hover:to-cyber-purple/40 hover:border-cyber-cyan/60 transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-5 h-5 text-cyber-cyan drop-shadow-sm" />
               </Button>
