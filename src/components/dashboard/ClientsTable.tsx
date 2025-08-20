@@ -13,7 +13,10 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const filteredData = data.filter(item => {
+  // Sort by most recent (assuming last entries are most recent)
+  const recentData = [...data].reverse().slice(0, 10);
+
+  const filteredData = recentData.filter(item => {
     const matchesSearch = item.Clients?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          item.Email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || item.Status === statusFilter;
@@ -50,15 +53,15 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
     <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg p-6 border border-blue-500/30 shadow-2xl">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h3 className="text-xl font-semibold text-white flex items-center gap-2">
-          Client Database
-          <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
+          Recent Orders
+          <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" />
         </h3>
         
         <div className="flex gap-2 w-full sm:w-auto">
           <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input
-              placeholder="Search clients..."
+              placeholder="Search orders..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 bg-gray-800/50 border-blue-500/30 text-white placeholder-gray-400"
@@ -111,7 +114,7 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2 text-green-400 font-semibold">
                       <IndianRupee className="w-4 h-4" />
-                      {item.Price?.replace('$', '') || '0'}
+                      {item.Price?.replace(/[₹$]/g, '') || '0'}
                     </div>
                   </td>
                   <td className="py-3 px-4">
@@ -137,7 +140,7 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
       {filteredData.length === 0 && (
         <div className="text-center py-8 text-gray-400">
           <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
-          <p>No clients found matching your search.</p>
+          <p>No recent orders found matching your search.</p>
         </div>
       )}
     </div>

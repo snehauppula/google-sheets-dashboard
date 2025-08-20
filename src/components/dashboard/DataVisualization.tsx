@@ -13,21 +13,29 @@ const DataVisualization = ({ data = [] }: DataVisualizationProps) => {
     { name: 'Pending', value: data.filter(item => item.Status === 'Pending').length, color: '#F59E0B' },
   ];
 
-  // Prepare revenue trend data with proper currency conversion
-  const revenueData = data.map((item, index) => ({
-    client: item.Clients || `Client ${index + 1}`,
-    revenue: parseFloat(item.Price?.toString().replace(/[₹$,]/g, '') || '0'),
-    headshots: parseInt(item['No. of Headshots'] || '0')
-  }));
+  // Prepare revenue trend data with proper currency conversion and truncated names
+  const revenueData = data.map((item, index) => {
+    const clientName = item.Clients || `Client ${index + 1}`;
+    // Truncate long client names for better display
+    const truncatedName = clientName.length > 15 ? clientName.substring(0, 12) + '...' : clientName;
+    
+    return {
+      client: truncatedName,
+      fullName: clientName, // Keep full name for tooltip
+      revenue: parseFloat(item.Price?.toString().replace(/[₹$,]/g, '') || '0'),
+      headshots: parseInt(item['No. of Headshots'] || '0')
+    };
+  }).slice(0, 8); // Show only first 8 for better readability
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      const data = payload[0].payload;
       return (
         <div className="bg-gray-900/90 backdrop-blur-xl p-3 border border-blue-500/30 rounded-lg shadow-xl">
-          <p className="text-blue-400 font-medium">{label}</p>
+          <p className="text-blue-400 font-medium">{data.fullName}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-white">
-              {entry.name}: {entry.name === 'revenue' ? `₹${entry.value}` : entry.value}
+              {entry.name === 'revenue' ? `Revenue: ₹${entry.value}` : `${entry.name}: ${entry.value}`}
             </p>
           ))}
         </div>
@@ -46,13 +54,17 @@ const DataVisualization = ({ data = [] }: DataVisualizationProps) => {
         </h3>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={revenueData}>
+            <BarChart data={revenueData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(59, 130, 246, 0.2)" />
               <XAxis 
                 dataKey="client" 
                 stroke="#9CA3AF" 
-                fontSize={12}
+                fontSize={11}
                 tick={{ fill: '#9CA3AF' }}
+                angle={-45}
+                textAnchor="end"
+                height={80}
+                interval={0}
               />
               <YAxis 
                 stroke="#9CA3AF" 
