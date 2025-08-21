@@ -26,13 +26,13 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'Delivered':
-        return <CheckCircle className="w-4 h-4 text-green-400" />;
+        return <CheckCircle className="w-3 h-3 text-green-400 flex-shrink-0" />;
       case 'In Process':
-        return <Clock className="w-4 h-4 text-blue-400" />;
+        return <Clock className="w-3 h-3 text-blue-400 flex-shrink-0" />;
       case 'Pending':
-        return <AlertTriangle className="w-4 h-4 text-orange-400" />;
+        return <AlertTriangle className="w-3 h-3 text-orange-400 flex-shrink-0" />;
       default:
-        return <Clock className="w-4 h-4 text-gray-400" />;
+        return <Clock className="w-3 h-3 text-gray-400 flex-shrink-0" />;
     }
   };
 
@@ -50,113 +50,111 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
   };
 
   return (
-    <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg p-6 border border-blue-500/30 shadow-2xl h-full flex flex-col">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+    <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg p-4 border border-blue-500/30 shadow-2xl h-full flex flex-col min-h-[500px] max-h-[600px]">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
           Recent Orders
           <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse" />
         </h3>
         
         <div className="flex gap-2 w-full sm:w-auto">
-          <div className="relative flex-1 sm:flex-none sm:w-64">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <div className="relative flex-1 sm:flex-none sm:w-48">
+            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
             <Input
-              placeholder="Search orders..."
+              placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-gray-800/50 border-blue-500/30 text-white placeholder-gray-400 w-full"
+              className="pl-7 py-1 text-sm bg-gray-800/50 border-blue-500/30 text-white placeholder-gray-400 w-full h-8"
             />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[140px] bg-gray-800/50 border-blue-500/30 text-white">
-              <Filter className="w-4 h-4 text-blue-400 mr-2" />
-              <SelectValue placeholder="Filter" />
+            <SelectTrigger className="w-[100px] h-8 bg-gray-800/50 border-blue-500/30 text-white text-sm">
+              <Filter className="w-3 h-3 text-blue-400 mr-1" />
+              <SelectValue placeholder="All" />
             </SelectTrigger>
             <SelectContent className="bg-gray-800 border-blue-500/30">
-              <SelectItem value="all" className="text-white">All Status</SelectItem>
-              <SelectItem value="Delivered" className="text-white">Delivered</SelectItem>
-              <SelectItem value="In Process" className="text-white">In Process</SelectItem>
-              <SelectItem value="Pending" className="text-white">Pending</SelectItem>
+              <SelectItem value="all" className="text-white text-sm">All</SelectItem>
+              <SelectItem value="Delivered" className="text-white text-sm">Delivered</SelectItem>
+              <SelectItem value="In Process" className="text-white text-sm">In Process</SelectItem>
+              <SelectItem value="Pending" className="text-white text-sm">Pending</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col min-h-0">
-        <div className="overflow-hidden rounded-lg border border-blue-500/20 flex-1">
-          <div className="overflow-auto h-full">
-            <table className="w-full">
-              <thead className="sticky top-0 bg-gray-900/95 backdrop-blur-sm z-10">
-                <tr className="border-b border-blue-500/30">
-                  <th className="text-left py-4 px-4 font-medium text-blue-400 w-1/4">Client</th>
-                  <th className="text-left py-4 px-4 font-medium text-blue-400 w-1/6">Headshots</th>
-                  <th className="text-left py-4 px-4 font-medium text-blue-400 w-1/6">Price</th>
-                  <th className="text-left py-4 px-4 font-medium text-blue-400 w-1/6">Status</th>
-                  <th className="text-left py-4 px-4 font-medium text-blue-400 w-1/4">Contact</th>
+      <div className="flex-1 overflow-hidden rounded-lg border border-blue-500/20">
+        <div className="h-full overflow-auto custom-scrollbar">
+          <table className="w-full text-sm">
+            <thead className="sticky top-0 bg-gray-900/95 backdrop-blur-sm z-10">
+              <tr className="border-b border-blue-500/30">
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Client</th>
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Shots</th>
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Price</th>
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Status</th>
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((item, index) => (
+                <tr 
+                  key={index} 
+                  className="border-b border-gray-700/20 hover:bg-blue-500/5 transition-colors duration-200"
+                >
+                  <td className="py-2 px-2 max-w-[80px]">
+                    <div className="font-medium text-white text-xs truncate">
+                      {item.Clients || 'N/A'}
+                    </div>
+                  </td>
+                  <td className="py-2 px-2">
+                    <div className="flex items-center gap-1 text-gray-300 text-xs">
+                      <Camera className="w-3 h-3 text-purple-400 flex-shrink-0" />
+                      <span>{item['No. of Headshots'] || '0'}</span>
+                    </div>
+                  </td>
+                  <td className="py-2 px-2">
+                    <div className="flex items-center gap-1 text-green-400 font-medium text-xs">
+                      <IndianRupee className="w-3 h-3 flex-shrink-0" />
+                      <span className="truncate max-w-[60px]">{item.Price?.replace(/[₹$]/g, '') || '0'}</span>
+                    </div>
+                  </td>
+                  <td className="py-2 px-2">
+                    <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(item.Status)}`}>
+                      {getStatusIcon(item.Status)}
+                      <span className="truncate max-w-[50px]">{item.Status || 'Unknown'}</span>
+                    </div>
+                  </td>
+                  <td className="py-2 px-2 max-w-[100px]">
+                    <div 
+                      className="flex items-center gap-1 text-gray-300 hover:text-blue-400 transition-colors cursor-pointer text-xs" 
+                      onClick={() => window.open(`mailto:${item.Email}`)}
+                    >
+                      <Mail className="w-3 h-3 flex-shrink-0" />
+                      <span className="truncate">{item.Email || 'N/A'}</span>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredData.map((item, index) => (
-                  <tr 
-                    key={index} 
-                    className="border-b border-gray-700/30 hover:bg-blue-500/10 transition-colors duration-200 group"
-                  >
-                    <td className="py-4 px-4">
-                      <div className="font-medium text-white group-hover:text-blue-400 transition-colors truncate">
-                        {item.Clients || 'N/A'}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <Camera className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                        <span className="truncate">{item['No. of Headshots'] || '0'}</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-2 text-green-400 font-semibold">
-                        <IndianRupee className="w-4 h-4 flex-shrink-0" />
-                        <span className="truncate">{item.Price?.replace(/[₹$]/g, '') || '0'}</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(item.Status)} min-w-0`}>
-                        {getStatusIcon(item.Status)}
-                        <span className="truncate">{item.Status || 'Unknown'}</span>
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div 
-                        className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors cursor-pointer min-w-0" 
-                        onClick={() => window.open(`mailto:${item.Email}`)}
-                      >
-                        <Mail className="w-4 h-4 flex-shrink-0" />
-                        <span className="truncate">{item.Email || 'N/A'}</span>
-                      </div>
-                    </td>
+              ))}
+              {/* Fill remaining space if there are fewer items */}
+              {filteredData.length < 8 && (
+                [...Array(8 - filteredData.length)].map((_, index) => (
+                  <tr key={`empty-${index}`} className="border-b border-gray-700/10 h-8">
+                    <td className="py-2 px-2">&nbsp;</td>
+                    <td className="py-2 px-2">&nbsp;</td>
+                    <td className="py-2 px-2">&nbsp;</td>
+                    <td className="py-2 px-2">&nbsp;</td>
+                    <td className="py-2 px-2">&nbsp;</td>
                   </tr>
-                ))}
-                {/* Fill remaining space if there are fewer items */}
-                {filteredData.length < 8 && (
-                  [...Array(8 - filteredData.length)].map((_, index) => (
-                    <tr key={`empty-${index}`} className="border-b border-gray-700/10">
-                      <td className="py-4 px-4">&nbsp;</td>
-                      <td className="py-4 px-4">&nbsp;</td>
-                      <td className="py-4 px-4">&nbsp;</td>
-                      <td className="py-4 px-4">&nbsp;</td>
-                      <td className="py-4 px-4">&nbsp;</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
         
         {filteredData.length === 0 && (
-          <div className="flex-1 flex items-center justify-center py-8 text-gray-400">
+          <div className="flex items-center justify-center py-8 text-gray-400 h-full">
             <div className="text-center">
-              <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>No recent orders found matching your search.</p>
+              <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <p className="text-sm">No orders found</p>
             </div>
           </div>
         )}
