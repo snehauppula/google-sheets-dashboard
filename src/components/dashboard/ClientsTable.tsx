@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, Filter, Mail, Camera, IndianRupee, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -56,33 +56,46 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
   // Dynamically calculate how many empty rows are needed to fill the visible area
   const [emptyRowsCount, setEmptyRowsCount] = useState(0);
 
+  const calcEmptyRows = useCallback(() => {
+    const container = scrollRef.current;
+    const theadEl = theadRef.current;
+    if (!container) return;
+
+    const containerHeight = container.clientHeight; // visible scroll viewport
+    const headerHeight = theadEl?.offsetHeight ?? 32; // estimate if not measured
+    const rowHeight = 40; // h-10 rows ~ 40px
+
+    // How many rows fit in the remaining space after header
+    const rowsThatFit = Math.max(0, Math.ceil((containerHeight - headerHeight) / rowHeight));
+    const needed = Math.max(0, rowsThatFit - filteredData.length);
+    setEmptyRowsCount(needed);
+    console.log('[ClientsTable] containerHeight:', containerHeight, 'headerHeight:', headerHeight, 'rowsThatFit:', rowsThatFit, 'filtered:', filteredData.length, 'emptyNeeded:', needed);
+  }, [filteredData.length]);
+
+  // Initial + window-resize recalculation
   useEffect(() => {
-    const calcEmptyRows = () => {
-      const container = scrollRef.current;
-      const theadEl = theadRef.current;
-      if (!container) return;
-
-      const containerHeight = container.clientHeight; // visible scroll viewport
-      const headerHeight = theadEl?.offsetHeight ?? 32; // estimate if not measured
-      const rowHeight = 40; // h-10 rows ~ 40px
-
-      // How many rows fit in the remaining space after header
-      const rowsThatFit = Math.max(0, Math.ceil((containerHeight - headerHeight) / rowHeight));
-      const needed = Math.max(0, rowsThatFit - filteredData.length);
-      setEmptyRowsCount(needed);
-      console.log('[ClientsTable] containerHeight:', containerHeight, 'headerHeight:', headerHeight, 'rowsThatFit:', rowsThatFit, 'filtered:', filteredData.length, 'emptyNeeded:', needed);
-    };
-
-    // Initial calc
     calcEmptyRows();
-
-    // Recalculate on window resize
     window.addEventListener('resize', calcEmptyRows);
     return () => window.removeEventListener('resize', calcEmptyRows);
-  }, [filteredData.length, searchTerm, statusFilter]);
+  }, [calcEmptyRows, searchTerm, statusFilter]);
+
+  // Recalculate when the scroll container's size changes (e.g., grid column height changes)
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const ro = new ResizeObserver(() => {
+      calcEmptyRows();
+    });
+    ro.observe(el);
+
+    return () => {
+      ro.disconnect();
+    };
+  }, [calcEmptyRows]);
 
   return (
-    <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg p-4 border border-blue-500/30 shadow-2xl h-full flex flex-col min-h-[600px]">
+    <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg p-4 border border-blue-500/30 shadow-2xl h-full flex flex-col min-h-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
           Recent Orders
