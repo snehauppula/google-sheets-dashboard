@@ -49,8 +49,12 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
     }
   };
 
+  // Calculate how many empty rows we need to fill the space
+  const minRowsToShow = 15; // Increased to fill more space
+  const emptyRowsCount = Math.max(0, minRowsToShow - filteredData.length);
+
   return (
-    <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg p-4 border border-blue-500/30 shadow-2xl h-full flex flex-col min-h-[500px] max-h-[600px]">
+    <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg p-4 border border-blue-500/30 shadow-2xl h-full flex flex-col min-h-[600px]">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
           Recent Orders
@@ -87,45 +91,45 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
           <table className="w-full text-sm">
             <thead className="sticky top-0 bg-gray-900/95 backdrop-blur-sm z-10">
               <tr className="border-b border-blue-500/30">
-                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Client</th>
-                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Shots</th>
-                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Price</th>
-                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Status</th>
-                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs">Email</th>
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs w-[20%]">Client</th>
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs w-[15%]">Shots</th>
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs w-[15%]">Price</th>
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs w-[20%]">Status</th>
+                <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs w-[30%]">Email</th>
               </tr>
             </thead>
             <tbody>
               {filteredData.map((item, index) => (
                 <tr 
                   key={index} 
-                  className="border-b border-gray-700/20 hover:bg-blue-500/5 transition-colors duration-200"
+                  className="border-b border-gray-700/20 hover:bg-blue-500/5 transition-colors duration-200 h-10"
                 >
-                  <td className="py-2 px-2 max-w-[80px]">
-                    <div className="font-medium text-white text-xs truncate">
+                  <td className="py-2 px-2 w-[20%]">
+                    <div className="font-medium text-white text-xs truncate max-w-[120px]">
                       {item.Clients || 'N/A'}
                     </div>
                   </td>
-                  <td className="py-2 px-2">
+                  <td className="py-2 px-2 w-[15%]">
                     <div className="flex items-center gap-1 text-gray-300 text-xs">
                       <Camera className="w-3 h-3 text-purple-400 flex-shrink-0" />
                       <span>{item['No. of Headshots'] || '0'}</span>
                     </div>
                   </td>
-                  <td className="py-2 px-2">
+                  <td className="py-2 px-2 w-[15%]">
                     <div className="flex items-center gap-1 text-green-400 font-medium text-xs">
                       <IndianRupee className="w-3 h-3 flex-shrink-0" />
                       <span className="truncate max-w-[60px]">{item.Price?.replace(/[₹$]/g, '') || '0'}</span>
                     </div>
                   </td>
-                  <td className="py-2 px-2">
-                    <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(item.Status)}`}>
+                  <td className="py-2 px-2 w-[20%]">
+                    <div className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(item.Status)} max-w-[90px]`}>
                       {getStatusIcon(item.Status)}
-                      <span className="truncate max-w-[50px]">{item.Status || 'Unknown'}</span>
+                      <span className="truncate">{item.Status || 'Unknown'}</span>
                     </div>
                   </td>
-                  <td className="py-2 px-2 max-w-[100px]">
+                  <td className="py-2 px-2 w-[30%]">
                     <div 
-                      className="flex items-center gap-1 text-gray-300 hover:text-blue-400 transition-colors cursor-pointer text-xs" 
+                      className="flex items-center gap-1 text-gray-300 hover:text-blue-400 transition-colors cursor-pointer text-xs max-w-[150px]" 
                       onClick={() => window.open(`mailto:${item.Email}`)}
                     >
                       <Mail className="w-3 h-3 flex-shrink-0" />
@@ -134,15 +138,15 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
                   </td>
                 </tr>
               ))}
-              {/* Fill remaining space if there are fewer items */}
-              {filteredData.length < 8 && (
-                [...Array(8 - filteredData.length)].map((_, index) => (
-                  <tr key={`empty-${index}`} className="border-b border-gray-700/10 h-8">
-                    <td className="py-2 px-2">&nbsp;</td>
-                    <td className="py-2 px-2">&nbsp;</td>
-                    <td className="py-2 px-2">&nbsp;</td>
-                    <td className="py-2 px-2">&nbsp;</td>
-                    <td className="py-2 px-2">&nbsp;</td>
+              {/* Fill remaining space with empty rows */}
+              {emptyRowsCount > 0 && (
+                [...Array(emptyRowsCount)].map((_, index) => (
+                  <tr key={`empty-${index}`} className="border-b border-gray-700/10 h-10">
+                    <td className="py-2 px-2 w-[20%]">&nbsp;</td>
+                    <td className="py-2 px-2 w-[15%]">&nbsp;</td>
+                    <td className="py-2 px-2 w-[15%]">&nbsp;</td>
+                    <td className="py-2 px-2 w-[20%]">&nbsp;</td>
+                    <td className="py-2 px-2 w-[30%]">&nbsp;</td>
                   </tr>
                 ))
               )}
