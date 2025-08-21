@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Search, Filter, Mail, Camera, IndianRupee, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,10 @@ interface ClientsTableProps {
 const ClientsTable = ({ data = [] }: ClientsTableProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+
+  // Refs to measure available height for dynamic filler rows
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const theadRef = useRef<HTMLTableSectionElement | null>(null);
 
   // Sort by most recent (assuming last entries are most recent)
   const recentData = [...data].reverse().slice(0, 10);
@@ -49,9 +53,33 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
     }
   };
 
-  // Calculate how many empty rows we need to fill the space
-  const minRowsToShow = 15; // Increased to fill more space
-  const emptyRowsCount = Math.max(0, minRowsToShow - filteredData.length);
+  // Dynamically calculate how many empty rows are needed to fill the visible area
+  const [emptyRowsCount, setEmptyRowsCount] = useState(0);
+
+  useEffect(() => {
+    const calcEmptyRows = () => {
+      const container = scrollRef.current;
+      const theadEl = theadRef.current;
+      if (!container) return;
+
+      const containerHeight = container.clientHeight; // visible scroll viewport
+      const headerHeight = theadEl?.offsetHeight ?? 32; // estimate if not measured
+      const rowHeight = 40; // h-10 rows ~ 40px
+
+      // How many rows fit in the remaining space after header
+      const rowsThatFit = Math.max(0, Math.ceil((containerHeight - headerHeight) / rowHeight));
+      const needed = Math.max(0, rowsThatFit - filteredData.length);
+      setEmptyRowsCount(needed);
+      console.log('[ClientsTable] containerHeight:', containerHeight, 'headerHeight:', headerHeight, 'rowsThatFit:', rowsThatFit, 'filtered:', filteredData.length, 'emptyNeeded:', needed);
+    };
+
+    // Initial calc
+    calcEmptyRows();
+
+    // Recalculate on window resize
+    window.addEventListener('resize', calcEmptyRows);
+    return () => window.removeEventListener('resize', calcEmptyRows);
+  }, [filteredData.length, searchTerm, statusFilter]);
 
   return (
     <div className="bg-gray-900/80 backdrop-blur-xl rounded-lg p-4 border border-blue-500/30 shadow-2xl h-full flex flex-col min-h-[600px]">
@@ -86,10 +114,10 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden rounded-lg border border-blue-500/20">
-        <div className="h-full overflow-auto custom-scrollbar">
-          <table className="w-full text-sm">
-            <thead className="sticky top-0 bg-gray-900/95 backdrop-blur-sm z-10">
+      <div className="flex-1 min-h-0 overflow-hidden rounded-lg border border-blue-500/20">
+        <div ref={scrollRef} className="h-full overflow-auto custom-scrollbar">
+          <table className="w-full text-sm table-fixed">
+            <thead ref={theadRef} className="sticky top-0 bg-gray-900/95 backdrop-blur-sm z-10">
               <tr className="border-b border-blue-500/30">
                 <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs w-[20%]">Client</th>
                 <th className="text-left py-2 px-2 font-medium text-blue-400 text-xs w-[15%]">Shots</th>
@@ -138,7 +166,7 @@ const ClientsTable = ({ data = [] }: ClientsTableProps) => {
                   </td>
                 </tr>
               ))}
-              {/* Fill remaining space with empty rows */}
+              {/* Fill remaining space with empty rows dynamically based on available height */}
               {emptyRowsCount > 0 && (
                 [...Array(emptyRowsCount)].map((_, index) => (
                   <tr key={`empty-${index}`} className="border-b border-gray-700/10 h-10">
